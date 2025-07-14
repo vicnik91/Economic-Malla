@@ -3,39 +3,55 @@
 <head>
   <meta charset="UTF-8">
   <title>Malla Curricular - Economía UNAP</title>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --rosado: #f8bbd0;
-      --fucsia: #f06292;
-      --lila: #ce93d8;
-      --verde-agua: #80deea;
-      --completado: #aed581;
+      --rosado: #ffe0ec;
+      --fucsia: #f48fb1;
+      --lila: #d1c4e9;
+      --verde-agua: #b2ebf2;
+      --completado: #c8e6c9;
+      --pastel-azul: #e3f2fd;
+      --pastel-gris: #f5f5f5;
     }
     body {
-      font-family: Arial, sans-serif;
-      background: #fafafa;
-      margin: 30px;
+      font-family: 'Quicksand', sans-serif;
+      background: var(--pastel-gris);
+      color: #333;
+      margin: 0;
+      padding: 30px;
     }
     h1 {
       text-align: center;
-      color: #333;
+      color: #444;
+      margin-bottom: 10px;
+    }
+    p {
+      text-align: center;
+      font-size: 1.05rem;
+      margin-bottom: 20px;
     }
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 30px;
+      margin-top: 10px;
+      background: white;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
     }
     th, td {
-      border: 1px solid #ccc;
-      padding: 10px;
+      border: 1px solid #ddd;
+      padding: 12px;
       text-align: center;
     }
     th {
-      background-color: #333;
-      color: white;
+      background-color: var(--pastel-azul);
+      color: #333;
+      font-weight: 600;
     }
     tr.ciclo td {
-      background-color: #e0e0e0;
+      background-color: #eeeeee;
       font-weight: bold;
       text-align: left;
     }
@@ -46,56 +62,143 @@
     }
     td:hover {
       cursor: pointer;
-      opacity: 0.85;
+      opacity: 0.9;
     }
     .cadena { background-color: var(--rosado); }
     .una-vez { background-color: var(--fucsia); color: white; }
     .repetido { background-color: var(--lila); }
     .extra { background-color: var(--verde-agua); }
-    #reset {
-      background: #333;
-      color: white;
-      padding: 8px 16px;
+    button {
+      background: #90caf9;
+      color: #333;
+      padding: 10px 20px;
       border: none;
-      border-radius: 4px;
-      margin: 15px 0;
+      border-radius: 8px;
+      margin: 8px;
       cursor: pointer;
+      font-weight: 600;
+      font-family: 'Quicksand', sans-serif;
     }
-    #reset:hover {
-      background: #555;
+    button:hover {
+      background: #64b5f6;
+    }
+    .progress-container {
+      margin-top: 25px;
+      background: #e0e0e0;
+      border-radius: 5px;
+      overflow: hidden;
+      height: 20px;
+    }
+    .progress-bar {
+      height: 20px;
+      background: #81c784;
+      width: 0%;
+      text-align: center;
+      color: white;
+      font-size: 14px;
+      line-height: 20px;
+      transition: width 0.5s;
+    }
+    #lista-aprobados {
+      margin-top: 30px;
+      background: white;
+      border: 1px solid #ccc;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    #lista-aprobados h2 {
+      margin-top: 0;
+      font-size: 1.2rem;
+      color: #444;
+    }
+    .aprobado-item {
+      padding: 5px 0;
     }
   </style>
 </head>
 <body>
   <h1>Malla Curricular Interactiva - Economía UNAP</h1>
-  <p>Haz clic en los cursos para marcarlos como completados. Colores:
-    <strong>Rosado</strong> = cadena, <strong>Fucsia</strong> = una sola vez,
-    <strong>Lila</strong> = repitiendo, <strong>Verde agua</strong> = curso extra.
+  <p>
+    Haz clic en los cursos para marcarlos como completados. Colores: <strong>Rosado</strong> = cadena,
+    <strong>Fucsia</strong> = una sola vez, <strong>Lila</strong> = repitiendo,
+    <strong>Verde agua</strong> = curso extra.
   </p>
-  <button id="reset">🔄 Resetear progreso</button>
+  <div style="text-align: center;">
+    <button id="reset">🔄 Resetear progreso</button>
+    <button id="togglePendientes">👀 Ver solo pendientes</button>
+    <button id="descargarJSON">💾 Descargar JSON</button>
+  </div>
+
+  <div class="progress-container">
+    <div id="progressBar" class="progress-bar">0%</div>
+  </div>
+
   <table id="malla">
     <thead>
       <tr><th>Ciclo</th><th>Curso</th><th>Prerrequisitos</th></tr>
     </thead>
-    <tbody>
-      <!-- Ejemplo de ciclos -->
-      <tr class="ciclo"><td colspan="3">Ciclo I</td></tr>
-      <tr><td>I</td><td class="cadena" data-nombre="Matemática Básica">Matemática Básica</td><td>-</td></tr>
-      <tr><td>I</td><td class="una-vez" data-nombre="Introducción a la Economía">Introducción a la Economía</td><td>-</td></tr>
-      <tr><td>I</td><td class="extra" data-nombre="Comunicación">Comunicación</td><td>-</td></tr>
-      <tr><td>I</td><td class="repetido" data-nombre="Contabilidad Básica">Contabilidad Básica</td><td>-</td></tr>
-
-      <tr class="ciclo"><td colspan="3">Ciclo II</td></tr>
-      <tr><td>II</td><td class="cadena" data-nombre="Microeconomía I" data-prereq="Introducción a la Economía">Microeconomía I</td><td>Introducción a la Economía</td></tr>
-      <tr><td>II</td><td class="cadena" data-nombre="Matemática I" data-prereq="Matemática Básica">Matemática I</td><td>Matemática Básica</td></tr>
-      <tr><td>II</td><td class="extra" data-nombre="Estadística I" data-prereq="Matemática Básica">Estadística I</td><td>Matemática Básica</td></tr>
-
-      <!-- Continúa agregando los demás ciclos y cursos -->
+    <tbody id="cursoBody">
+      <!-- Aquí van los cursos por ciclo -->
     </tbody>
   </table>
+
+  <div id="lista-aprobados">
+    <h2>✅ Cursos Completados</h2>
+    <div id="aprobados-lista"></div>
+  </div>
+
   <script>
     const celdas = document.querySelectorAll('[data-nombre]');
     const resetBtn = document.getElementById('reset');
+    const progressBar = document.getElementById('progressBar');
+    const listaAprobados = document.getElementById('aprobados-lista');
+    const togglePendientesBtn = document.getElementById('togglePendientes');
+    const descargarBtn = document.getElementById('descargarJSON');
+    let mostrandoPendientes = false;
+
+    function actualizarProgreso() {
+      const total = document.querySelectorAll('[data-nombre]').length;
+      const completados = document.querySelectorAll('.completed').length;
+      const porcentaje = Math.round((completados / total) * 100);
+      progressBar.style.width = porcentaje + '%';
+      progressBar.textContent = porcentaje + '%';
+    }
+
+    function actualizarListaAprobados() {
+      const aprobados = JSON.parse(localStorage.getItem("cursosAprobados") || "[]");
+      listaAprobados.innerHTML = "";
+      if (aprobados.length === 0) {
+        listaAprobados.innerHTML = "<em>Aún no has completado cursos.</em>";
+        return;
+      }
+      aprobados.forEach(curso => {
+        const div = document.createElement("div");
+        div.classList.add("aprobado-item");
+        div.textContent = "• " + curso;
+        listaAprobados.appendChild(div);
+      });
+    }
+
+    function alternarPendientes() {
+      const todas = document.querySelectorAll('[data-nombre]');
+      mostrandoPendientes = !mostrandoPendientes;
+      togglePendientesBtn.textContent = mostrandoPendientes ? "👁 Mostrar todos" : "👀 Ver solo pendientes";
+      todas.forEach(td => {
+        const curso = td.dataset.nombre;
+        const aprobado = td.classList.contains("completed");
+        td.parentElement.style.display = (mostrandoPendientes && aprobado) ? "none" : "table-row";
+      });
+    }
+
+    function descargarJSON() {
+      const data = JSON.parse(localStorage.getItem("cursosAprobados") || "[]");
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'cursos_aprobados.json';
+      link.click();
+    }
 
     celdas.forEach(td => {
       td.addEventListener('click', () => {
@@ -116,21 +219,31 @@
           td.classList.add("completed");
         }
         localStorage.setItem("cursosAprobados", JSON.stringify(aprobados));
+        actualizarProgreso();
+        actualizarListaAprobados();
       });
     });
 
     resetBtn.addEventListener('click', () => {
       localStorage.removeItem('cursosAprobados');
-      location.reload();
+      document.querySelectorAll('[data-nombre]').forEach(td => td.classList.remove('completed'));
+      actualizarProgreso();
+      actualizarListaAprobados();
+      if (mostrandoPendientes) alternarPendientes();
     });
+
+    togglePendientesBtn.addEventListener('click', alternarPendientes);
+    descargarBtn.addEventListener('click', descargarJSON);
 
     window.addEventListener('DOMContentLoaded', () => {
       const aprobados = JSON.parse(localStorage.getItem("cursosAprobados") || "[]");
-      celdas.forEach(td => {
+      document.querySelectorAll('[data-nombre]').forEach(td => {
         if (aprobados.includes(td.dataset.nombre)) {
           td.classList.add("completed");
         }
       });
+      actualizarProgreso();
+      actualizarListaAprobados();
     });
   </script>
 </body>
